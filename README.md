@@ -1,46 +1,41 @@
-<head><meta name="google-site-verification" content="1TW3WR55FRFPtA0ho0QfHUM6Zyv9Tf97DslrUMyFTnE" /></head>
 # Embedded Ldap KDC
 
- This is the project for starting an embedded Directory Service and Kerberos which can be used to run locally or also
- can be used for JUNIT Testing for LDAP Integration use cases or Kerberos. 
- This is also useful in Hadoop testing to mimic scenerios of a kerbeorized cluster. 
- Also, I added few Microsoft AD schema object like sAMAccountName and memberOf to mimic Active Directory. 
- (One can look at /EmbeddedLdapKDC/src/main/resources/krish.schema)
- 
- So, the EmbeddedLdapKDC is an eclipse project and can be used to run it inside elipse or debugging if you change any code.
- The main class is <b>com.krish.ead.server.EADServer</b>.
- 
- 
- For writing Junit Test cases, refer to the class <b>com.krish.ead.server.KerberosLdapIntegrationTest</b>.
- A lot of time we need to generate keytabs on the fly as needed for Hadoop related integration Testing also.
- Refer to the method com.krish.ead.server.KerberosLdapIntegrationTest.createKeytab.
+This project implements an embedded LDAP and Kerberos service that can be used for Unit tests.
+It is also useful for testing Hadoop clusters secured with Kerberos.
+Also, I added few Microsoft AD schema object like sAMAccountName and memberOf to [mimic Active Directory](./EmbeddedLdapKDC/src/main/resources/krish.schema)
 
- We may want to kinit from unix shell if developing a shell script for various use cases like ldap search, or ldap modify etc.
- Copy the krb5.conf located here /EmbeddedLdapKDC/src/main/resources/krb5.conf
- and use this command. 
- The default location in unix is <b>/etc/krb5.conf</b>. <p/>
+## EmbeddedLdapKDC
+
+It is an project that can be run in your idea by using maven. The main class is `com.krish.ead.server.EADServer`.
+
+## JUnit Integration
+
+1. To write JUnit test refer to the class `com.krish.ead.server.KerberosLdapIntegrationTest`.
+2. To generate keytabs refer to `com.krish.ead.server.KerberosLdapIntegrationTest.createKeytab`.
+3. If you want to `kinit` from unix shell, copy the file `krb5.conf` from `./EmbeddedLdapKDC/src/main/resources/krb5.conf` to `/etc/krb5.conf` (or to another folder you like) and use this command.
+
+```bash
  env KRB5_CONFIG="location of krb5.conf" kinit krish
- 
- You may need to programatically addUser or Groups or add users to the group.
- Refer to the class com.krish.directory.service.EadSchemaService, where various methods are exposed to do the same.
- 
- Alternatively, you may also use ldapsearch, ldapmodify, ldapadd etc from unix shell or in a script.
- Refer to the command below to add an user through ldif which is in Resources folder here.
- 
- bash>ldapmodify -H "ldap://localhost:10389" -D "cn=manager,ou=users,dc=jpmis,dc=com" -w manager -a -f captain.ldif
- 
- 
-Note: By deafult, the embedded server  will add users as Read only user, so if you need to add, delete or modify any objects 
-one need to be login as  cn=manager,ou=users,dc=jpmis,dc=com with password manager to do so,
+```
 
-The default port for LDAP Server is 10389 and Kerberos is 16088. Feel free to change this.
+4. To add programmatically a user or groups refer to the class `com.krish.directory.service.EadSchemaService`, where various methods are exposed to do the same.
+
+> Alternatively, you may also use ldapsearch, ldapmodify, ldapadd etc from unix shell or in a script.
+  refer to the command below to add an user through ldif which is in Resources folder here.
+
+```bash
+$ ldapmodify -H "ldap://localhost:10389" -D "cn=manager,ou=users,dc=jpmis,dc=com" -w manager -a -f captain.ldif
+```
+
+>  By default, the embedded server will add users as Read only user, so if you need to add, delete or modify any objects
+one need to be login as `cn=manager,ou=users,dc=jpmis,dc=com` with password manager to do so,
+
+The default port for LDAP Server is `10389` and Kerberos is `16088`. Feel free to change this.
 
 You can also start the server from shell.
-Go to StandaloneEmbeddedLdapKDC/bin and invoke ./ead.sh "instance name" "start or run" 
+Go to StandaloneEmbeddedLdapKDC/bin and invoke ./ead.sh "instance name" "start or run"
 
-
-In case, you are testing Kerberos with any Hadoop related use case, you may want to go through
-http://krishdey5.blogspot.com/
+If you want to read more take a look at this [blog post](http://krishdey5.blogspot.com/)
 
 
 #LDAP #HADOOP #EMBEDDEDKDC #EMbedded LDAP #Embedded KDC
